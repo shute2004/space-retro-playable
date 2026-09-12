@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SPACE RETRO</title>
+<style>
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    padding: 8px;
+    background: #000;
+    color: #0f0;
+    font-family: 'Courier New', monospace;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    overflow: hidden;
+    user-select: none;
+}
+
+#game-wrapper {
+    position: relative;
+    width: min(480px, calc(100vw - 16px), calc(100vh - 76px));
+}
+
+#hud {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    margin-bottom: 15px;
+    font-size: clamp(14px, 3.5vw, 18px);
+    color: #0ff;
+    text-shadow: 0 0 8px #0ff;
+}
+
+#hud .right {
+    text-align: right;
+}
+
+#game-container {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    height: auto;
+    border: 4px solid #0f0;
+    box-shadow: 0 0 25px rgba(0, 255, 0, 0.5);
+    overflow: hidden;
+    background: #000;
+}
+
+#game-canvas {
+    display: block;
+    width: 100%;
+    height: 100%;
+    background: #000;
+    image-rendering: pixelated;
+    touch-action: none;
+}
+
+#overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.85);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    z-index: 10;
+    color: #fff;
+}
+
+#overlay h1 {
+    font-size: clamp(16px, 5vw, 28px);
+    color: #f0f;
+    text-shadow: 0 0 15px #f0f;
+    margin: 0 0 30px 0;
+    animation: glow 1.5s ease-in-out infinite alternate;
+}
+
+@keyframes glow {
+    from { text-shadow: 0 0 10px #f0f, 0 0 20px #f0f; }
+    to { text-shadow: 0 0 20px #f0f, 0 0 30px #f0f; }
+}
+
+#overlay p {
+    font-size: clamp(12px, 3.2vw, 16px);
+    color: #0f0;
+    text-shadow: 0 0 5px #0f0;
+    margin: 10px 0;
+}
+
+.blink {
+    animation: blink 1s steps(1) infinite;
+}
+
+@keyframes blink {
+    50% { opacity: 0; }
+}
+
+/* CRT風スキャンライン */
+#game-container::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.3) 50%);
+    background-size: 100% 4px;
+    pointer-events: none;
+    z-index: 5;
+}
+
+/* 画面端の暗影 */
+#game-container::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    box-shadow: inset 0 0 80px rgba(0,0,0,0.9);
+    pointer-events: none;
+    z-index: 6;
+}
+
+.hidden {
+    display: none !important;
+}
+
+#controls {
+    margin-top: 20px;
+    font-size: 10px;
+    color: #555;
+    text-align: center;
+}
+
+#controls span {
+    color: #0ff;
+}
+
+#reward-continue {
+    display: none;
+    margin-top: 18px;
+    padding: 10px 12px;
+    border: 2px solid #0ff;
+    background: #000;
+    color: #0ff;
+    font: inherit;
+    font-size: clamp(12px, 3vw, 14px);
+    cursor: pointer;
+}
+
+#reward-continue:disabled {
+    opacity: 0.5;
+    cursor: default;
+}
+</style>
+</head>
+<body>
+<div id="game-wrapper">
+    <div id="hud">
+        <div>SCORE <span id="score">0000</span></div>
+        <div class="right">HI <span id="hiscore">0000</span></div>
+        <div class="right">LIFE <span id="lives">3</span></div>
+    </div>
+    <div id="game-container">
+        <canvas id="game-canvas" width="480" height="480"></canvas>
+        <div id="overlay">
+            <h1>SPACE RETRO</h1>
+            <p class="blink">PRESS SPACE / TAP TO START</p>
+            <div style="margin-top: 30px; color: #aaa; font-size: 10px;">
+                <p style="color:#aaa; text-shadow: none; margin: 5px 0;">&lt;- -&gt; : MOVE</p>
+                <p style="color:#aaa; text-shadow: none; margin: 5px 0;">SPACE : FIRE</p>
+                <p style="color:#aaa; text-shadow: none; margin: 5px 0;">TOUCH : DRAG + AUTO FIRE</p>
+            </div>
+            <button id="reward-continue" type="button">WATCH AD TO CONTINUE</button>
+        </div>
+    </div>
+    <div id="controls">&copy; 2026 <span>RETRO GAMES</span></div>
+</div>
+
+<script src="https://www.youtube.com/game_api/v1"></script>
+<script src="./game.js"></script>
+</body>
+</html>
